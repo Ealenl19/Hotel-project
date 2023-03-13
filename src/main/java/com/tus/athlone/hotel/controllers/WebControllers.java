@@ -1,0 +1,22 @@
+package com.tus.athlone.hotel.controllers;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tus.athlone.hotel.models.Booking;
+
+@Controller
+public class WebControllers {
+	
+	@GetMapping("/")
+	public String homePage(Model model){
+		model.addAttribute("Hello");
+		return "Hello";
+	}
+
+}
