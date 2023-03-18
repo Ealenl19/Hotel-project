@@ -31,25 +31,25 @@ public class CustomersController {
 	
 	
 	@GetMapping
-	@RequestMapping("{customerId}")
-	public Customer get(@PathVariable Long customerId){
-		return customerRepository.getById(customerId);
+	@RequestMapping("{customer_id}")
+	public Customer get(@PathVariable Long customer_id){
+		return customerRepository.getById(customer_id);
 	}
 	@PostMapping
 	public Customer create(@RequestBody final Customer customer) {
 		return customerRepository.saveAndFlush(customer);
 	}
 
-	@RequestMapping(value = "{customerId}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable Long customerId) {
-		customerRepository.deleteById(customerId);
+	@RequestMapping(value = "{customer_id}", method = RequestMethod.DELETE)
+	public void delete(@PathVariable Long customer_id) {
+		customerRepository.deleteById(customer_id);
 	}
 	
-	@RequestMapping(value = "{customerId}", method = RequestMethod.PUT)
-	public Customer update(@PathVariable Long customerId, @RequestBody final Customer customer) {
+	@RequestMapping(value = "{customer_id}", method = RequestMethod.PUT)
+	public Customer update(@PathVariable Long customer_id, @RequestBody final Customer customer) {
 		
-		Customer existingCustomer = customerRepository.getById(customerId);
-		BeanUtils.copyProperties(customer, existingCustomer, "customerId");
+		Customer existingCustomer = customerRepository.getById(customer_id);
+		BeanUtils.copyProperties(customer, existingCustomer, "customer_id");
 		return customerRepository.saveAndFlush(existingCustomer);
 	}
 }

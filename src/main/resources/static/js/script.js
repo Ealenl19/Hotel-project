@@ -1,25 +1,29 @@
-const form = document.querySelector('#inquiry-form');
+const form = document.querySelector('#register-form');
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const name = form.elements['name'].value;
-    const email = form.elements['email'].value;
-    const checkIn = form.elements['check-in'].value;
-    const checkOut = form.elements['check-out'].value;
-    const roomType = form.elements['room-type'].value;
-    const comments = form.elements['comments'].value;
+    const customer_name = form.elements['customer_name'].value;
+    const email_id = form.elements['email_id'].value;
+    const phone_number = form.elements['phone_number'].value;
+    const address = form.elements['address'].value;
+    const country = form.elements['country'].value;
+    const password = form.elements['password'].value;
+    const passport = form.elements['passport'].value;
 
     const data = {
-        name,
-        email,
-        checkIn,
-        checkOut,
-        roomType,
-        comments
+        customer_name,
+        email_id,
+        phone_number,
+        address,
+        country,
+        passport,
+        password
+        
+        
     };
 
-    fetch('https://example.com/inquiry', {
+    fetch('app/v1/customers', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -28,10 +32,16 @@ form.addEventListener('submit', (event) => {
     })
     .then(response => {
         if (response.ok) {
-            alert('Inquiry submitted successfully!');
+			console.log(response);
+			localStorage.setItem("customerName",form.elements['customer_name'].value);
+			console.log(form.elements['customer_name'].value)
+            window.location.href = 'http://localhost:5000/success.html'
             form.reset();
         } else {
-            alert('An error occurred. Please try again later.');
+			console.log(response);
+			window.location.href = 'http://localhost:5000/error.html',
+            ('#error').html(response);
+            
         }
     })
     .catch(error => {

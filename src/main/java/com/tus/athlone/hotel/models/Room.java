@@ -1,13 +1,18 @@
 package com.tus.athlone.hotel.models;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+
+import org.hibernate.annotations.NaturalId;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,58 +21,84 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity(name = "rooms")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Room {
 	@Id
-	@Column(unique=true)
-	@GeneratedValue private Long id;
-	@Column(unique=true,nullable = false)
-	private int roomNo;
+	@Column(unique = true)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	@ManyToOne
+	private Hotel hotel;
+	@NaturalId
+	@Column(nullable = false, unique = true)
+	private String roomNumber;
 	@Column(nullable = false)
-	private String roomType;
+	@Enumerated(EnumType.STRING)
+	private RoomType roomType;
 	@Column(nullable = false)
-	private Double price;
-	private Boolean smoking;
-	private Boolean wifi;
-	private Boolean tv;
-	
-	
-//	@OneToMany 
-//	@JoinTable(
-//			name = "room_bookings",
-//			joinColumns = @JoinColumn(name = "id"),
-//			inverseJoinColumns = @JoinColumn(name = "bookingId"))
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "room" )
-	private List <Booking> bookings;
-	
-	
-	public Room(){
-		
-	}
-	
+	private int beds;
+	@Column(nullable = false)
+	private BigDecimal costPerNight;
+	private String description;
+	private String available;
+	private String image;
+	@OneToMany(mappedBy = "room")
+	private List<Booking> bookings;
 
 	
-	public Room(Long id, int roomNo, String roomType, Double price) {
+	
+	
+	public String getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(String available) {
+		this.available = available;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public BigDecimal getCostPerNight() {
+		return costPerNight;
+	}
+
+	public void setCostPerNight(BigDecimal costPerNight) {
+		this.costPerNight = costPerNight;
+	}
+
+
+	public Room() {
+
+	}
+
+	public Room(String roomNumber, RoomType roomType, int beds, BigDecimal costPerNight, String description,
+			String image, String available) {
 		super();
-		this.id = id;
-		this.roomNo = roomNo;
+		this.roomNumber = roomNumber;
 		this.roomType = roomType;
-		this.price = price;
+		this.beds = beds;
+		this.costPerNight = costPerNight;
+		this.description = description;
+		this.image = image;
+		this.available = available;
 	}
-
-	public List<Booking> getbookings(){
-		return bookings;
-	}
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
 
 	public Long getId() {
 		return id;
@@ -77,53 +108,62 @@ public class Room {
 		this.id = id;
 	}
 
-	public int getRoomNo() {
-		return roomNo;
+	public Hotel getHotel() {
+		return hotel;
 	}
 
-	public void setRoomNo(int roomNo) {
-		this.roomNo = roomNo;
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
 	}
 
-	public String getRoomType() {
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
+	}
+
+	public RoomType getRoomType() {
 		return roomType;
 	}
 
-	public void setRoomType(String roomType) {
+	public void setRoomType(RoomType roomType) {
 		this.roomType = roomType;
 	}
 
-	public Boolean getSmoking() {
-		return smoking;
+	public int getBeds() {
+		return beds;
 	}
 
-	public void setSmoking(Boolean smoking) {
-		this.smoking = smoking;
+	public void setBeds(int beds) {
+		this.beds = beds;
 	}
 
-	public Boolean getWifi() {
-		return wifi;
+	public List<Booking> getBookings() {
+		return bookings;
 	}
 
-	public void setWifi(Boolean wifi) {
-		this.wifi = wifi;
+	public void setBooking(Booking booking) {
+		if (booking != null) {
+			booking.setRoom(this);
+			bookings.add(booking);
+			
+		}
 	}
 
-	public Boolean getTv() {
-		return tv;
-	}
+	public boolean isReserved() {
+		boolean booking;
+		if (bookings.size() >0) 
+			return booking = true;
+		return booking = false;
 
-	public void setTv(Boolean tv) {
-		this.tv = tv;
-	}
-	
-	public void setbookings(Booking booking) {
-		this.bookings.add(booking);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, price, roomNo, roomType, smoking, tv, wifi);
+		return Objects.hash(available, beds, bookings, costPerNight, description, hotel, id, image, roomNumber,
+				roomType);
 	}
 
 	@Override
@@ -135,21 +175,18 @@ public class Room {
 		if (getClass() != obj.getClass())
 			return false;
 		Room other = (Room) obj;
-		return  Objects.equals(id, other.id)
-				&& Objects.equals(price, other.price) && roomNo == other.roomNo
-				&& Objects.equals(roomType, other.roomType) && Objects.equals(smoking, other.smoking)
-				&& Objects.equals(tv, other.tv) && Objects.equals(wifi, other.wifi);
+		return Objects.equals(available, other.available) && beds == other.beds
+				&& Objects.equals(bookings, other.bookings) && Objects.equals(costPerNight, other.costPerNight)
+				&& Objects.equals(description, other.description) && Objects.equals(hotel, other.hotel)
+				&& Objects.equals(id, other.id) && Objects.equals(image, other.image)
+				&& Objects.equals(roomNumber, other.roomNumber) && roomType == other.roomType;
 	}
 
 	@Override
 	public String toString() {
-		return "Room [id=" + id + ", roomNo=" + roomNo + ", roomType=" + roomType + ", price=" + price + ", smoking="
-				+ smoking + ", wifi=" + wifi + ", tv=" + tv  + "]";
+		return "Room [id=" + id + ", hotel=" + hotel + ", roomNumber=" + roomNumber + ", roomType=" + roomType
+				+ ", beds=" + beds + ", costPerNight=" + costPerNight + ", description=" + description + ", available="
+				+ available + ", image=" + image + ", booking=" + bookings + "]";
 	}
 
-
-
-
-
-	
 }

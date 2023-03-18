@@ -21,7 +21,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-<link rel="stylesheet" href="css/common.css" />
+<link rel="stylesheet" href="common.css" />
 <style>
 
 
@@ -111,9 +111,9 @@ position: relative;
 								aria-describedby="emailHelp">
 						</div>
 						<div
-							class="d-flex align-items-center justify-content-between mb-2>
+							class="d-flex align-items-center justify-content-between mb-2 btn btn-dark shadow-none">
 						<button type="
-							submit" class="btn btn-dark shadow-none">
+							submit" >
 							LOGIN
 							</button>
 							<a href="javascript: void(0)"
@@ -160,7 +160,7 @@ position: relative;
 										type="number" class="form-control shadow-none">
 								</div>
 								<div class="col-md-6 p-0 mb-3">
-									<label class="form-label">Country</label> <input type="text"
+									<label class="form-label">Picture</label> <input type="file"
 										class="form-control shadow-none">
 								</div>
 								<div class="col-md-12 p-0 mb-3">
@@ -219,35 +219,28 @@ position: relative;
 		<div class="row">
 			<div class="col-lg-12 bg-white shadow p-4 rounded">
 				<h5 class="mb-4">Checking booking Availability</h5>
-				<form>
+				<form th:action="@{/room/checkAvailability}" method="post">
 					<div class="row align-items-end">
 						<div class="col-lg-3">
 							<label class="form-label" style="font-weight: 500;">Check-in</label>
-							<input type="date" class="form-control shadow-none">
+							<input type="date" name="checkinDate" class="form-control shadow-none">
 						</div>
 						<div class="col-lg-3">
 							<label class="form-label" style="font-weight: 500;">Check-out</label>
-							<input type="date" class="form-control shadow-none">
+							<input type="date"  name="checkoutDate"class="form-control shadow-none">
 						</div>
 						<div class="col-lg-3">
-							<label class="form-label shadow-none" style="font-weight: 500;">Adult</label>
-							<select class="form-select">
-								<option value="1">One</option>
-								<option value="2">Two</option>
-								<option value="3">Three</option>
-							</select>
-						</div>
-						<div class="col-lg-2">
-							<label class="form-label shadow-none" style="font-weight: 500;">Children</label>
-							<select class="form-select">
-								<option value="1">One</option>
-								<option value="2">Two</option>
-								<option value="3">Three</option>
+							<label class="form-label shadow-none" style="font-weight: 500;">Guest</label>
+							<select name="guests" class="form-select">
+								<option value=1>1</option>
+								<option value=2>2</option>
+								<option value=3>3</option>
+								<option value=4>4</option>
 							</select>
 						</div>
 						<div class="col-lg-1">
 							<button type="submit"
-								class="btn text-white shadow-none custom-bg">Submit</button>
+								class="btn text-blue shadow-none custom-bg">Submit</button>
 						</div>
 					</div>
 				</form>
@@ -297,8 +290,8 @@ position: relative;
 								class="bi bi-star text-warning"></i> 
 								</span>
 								<div class="d=flex justify-content-evently mb-2">
-								<a href="#"class="btn btn-sm text-white custom-bg shadown-none">Book Now</a>
-								<a href="#"class="btn btn-sm btn-outline-dark shadown-none">More Details</a>
+								<a th:href="@{/showRooms}" class="btn btn-sm btn-outline-dark custom-bg shadow-none">Book Now</a>
+								<a th:href="@{/showRooms}" class="btn btn-sm btn-outline-dark custom-bg shadow-none">More Details</a>
 								</div>
 								
 								
@@ -347,8 +340,8 @@ position: relative;
 								class="bi bi-star text-warning"></i> 
 								</span>
 								<div class="d=flex justify-content-evently mb-2">
-								<a href="#"class="btn btn-sm text-white custom-bg shadown-none">Book Now</a>
-								<a href="#"class="btn btn-sm btn-outline-dark shadown-none">More Details</a>
+								<a th:href="@{/showRooms}" class="btn btn-sm btn-outline-dark custom-bg shadow-none">Book Now</a>
+								<a th:href="@{/showRooms}" class="btn btn-sm btn-outline-dark custom-bg shadow-none">More Details</a>
 								</div>
 								
 								
@@ -397,8 +390,8 @@ position: relative;
 								class="bi bi-star text-warning"></i> 
 								</span>
 								<div class="d=flex justify-content-evently mb-2">
-								<a href="#"class="btn btn-sm text-white custom-bg shadown-none">Book Now</a>
-								<a href="#"class="btn btn-sm btn-outline-dark shadown-none">More Details</a>
+								<a th:href="@{/showRooms}" class="btn btn-sm btn-outline-dark custom-bg shadow-none">Book Now</a>
+								<a th:href="@{/showRooms}" class="btn btn-sm btn-outline-dark custom-bg shadow-none">More Details</a>
 								</div>
 								
 								
@@ -455,7 +448,7 @@ position: relative;
 	<!-- Swiper -->
   <div class="swiper swiper-testimonials">
     <div class="swiper-wrapper">
-    <div class="swiper-slide" bg-white p-4">
+    <div class="swiper-slide bg-white p-4">
      <div class="profile d-flex align-items-center mb-3">
      <img src="rooms/star-fill.svg" width="30px">
      <h6 margin-0 ms-2>Random user1</h6>
@@ -470,7 +463,7 @@ position: relative;
         <i class="bi bi-star-fill text-warning"></i>
      </div>
  </div>
- <div class="swiper-slide" bg-white p-4">
+ <div class="swiper-slide bg-white p-4">
      <div class="profile d-flex align-items-center mb-3">
      <img src="rooms/star-fill.svg" width="30px">
      <h6 margin-0 ms-2>Random user1</h6>
@@ -485,7 +478,7 @@ position: relative;
         <i class="bi bi-star-fill text-warning"></i>
      </div>
  </div>
- <div class="swiper-slide" bg-white p-4">
+ <div class="swiper-slide bg-white p-4">
      <div class="profile d-flex align-items-center mb-3">
      <img src="rooms/star-fill.svg" width="30px">
      <h6 margin-0 ms-2>Random user1</h6>
@@ -500,7 +493,7 @@ position: relative;
         <i class="bi bi-star-fill text-warning"></i>
      </div>
  </div>
- <div class="swiper-slide" bg-white p-4">
+ <div class="swiper-slide bg-white p-4">
      <div class="profile d-flex align-items-center mb-3">
      <img src="rooms/star-fill.svg" width="30px">
      <h6 margin-0 ms-2>Random user1</h6>
@@ -530,7 +523,7 @@ position: relative;
 	<h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Reach Us</h2>
 	<div class="container">
 	<div class="row">
-	<div class="col-lg-8",col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
+	<div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
 	</div>
 	<iframe class="w-100 rounded" height="320px" src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d38084.24712941308!2d-6.300336303268733!3d53.37429985090379!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e1!4m5!1s0x48670e80ea27ac2f%3A0xa00c7a9973171a0!2sDublin!3m2!1d53.3498053!2d-6.2603097!4m5!1s0x48671200f1dba25f%3A0x2b191b22fc59aea1!2sPoppintree!3m2!1d53.4001641!2d-6.2853274!5e0!3m2!1sen!2sie!4v1678686497879!5m2!1sen!2sie"   style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 	</div>
