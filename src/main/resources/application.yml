@@ -9,3 +9,6 @@
 #          scope:
 #           - email
 #           - profile
+paypal:
+  clientId: ATePs72ygJ0criT0AL8tDofOaE0ZWkdxyKfEjWk6ZMUgq7djxmRdjjaGns3qDG_Y4B1LWms8xRYCNibj
+  clientSecret: EIjxRrNNxLX3tJnDAVz9u3WPD9atmYPZrYmuYiX2rWuAa40grdcoWPKNjX1g84E2g4_IB8czWJYVk78D

@@ -17,6 +17,10 @@ public class BookingService {
     public List<Booking> findByRoom(Room room) {
         return bookingRepository.findByRoom(room);
     }
+    public Booking getBookingById(Long id) {
+        return bookingRepository.findById(id).orElse(null);
+    }
+    
     public Booking saveBooking(Booking booking) {
         bookingRepository.save(booking);
         return booking;

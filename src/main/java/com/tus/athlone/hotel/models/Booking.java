@@ -66,9 +66,10 @@ public class Booking {
 	private String lastName;
 	private String phoneNumber;
 	private String email;
+	private String payerId;
+	private String paymentId;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private CompletedPayment completedPayment;
+	private boolean paymentStatus=false;
 
 	@Column(nullable = false)
 	private LocalDateTime createdTime;
@@ -79,6 +80,36 @@ public class Booking {
 	
 
 	
+	public String getPayerId() {
+		return payerId;
+	}
+
+
+
+	public void setPayerId(String payerId) {
+		this.payerId = payerId;
+	}
+
+
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
+
+
+	public void setReservationId(UUID reservationId) {
+		this.reservationId = reservationId;
+	}
+
+
+
 	public Booking() {
 
 	}
@@ -110,13 +141,13 @@ public class Booking {
 		return room;
 	}
 
-	public CompletedPayment getCompletedPayment() {
-		return completedPayment;
+	public boolean getPaymentSatus() {
+		return paymentStatus;
 	}
 
-	public void setCompletedPayment(CompletedPayment completedPayment) {
-		createdTime = LocalDateTime.now();
-		this.completedPayment = completedPayment;
+	public void setPaymentStatus(boolean payment) {
+		
+		this.paymentStatus = payment;
 	}
 
 	public void setCreatedTime(LocalDateTime createdTime) {
@@ -236,15 +267,7 @@ public class Booking {
 		return reservationId;
 	}
 
-	public Extra.Type getExtraPricingType() {
-		switch (room.getRoomType()) {
-		case Balcony:
-		case Suit:
-			return Extra.Type.Premium;
-		default:
-			return Extra.Type.Basic;
-		}
-	}
+
 
 	public BigDecimal getTotalRoomCost() {
 		long nights = totalNights();

@@ -91,8 +91,8 @@ position: relative;
 
 
 	<p>Your booking has been confirmed. Here are the details:</p>
-    <table>
-        <tr>
+    <table class="table" >
+        <tr scope="row">
             <td><strong>Room Number:</strong></td>
             <td th:text="${booking.room.roomNumber}"></td>
         </tr>
@@ -109,8 +109,20 @@ position: relative;
             <td th:text="${booking.guests}"></td>
         </tr>
         <tr>
+            <td><strong>Tax</strong></td>
+            <td th:text="${booking.getTaxableAmount()}"></td>
+        </tr>
+                <tr>
+            <td><strong>ReservationId</strong></td>
+            <td th:text="${booking.reservationId}"></td>
+        </tr>
+        <tr>
             <td><strong>Total Cost:</strong></td>
             <td th:text="${booking.totalCost}"></td>
+            
+        <td>
+      <form th:action="@{/payment/{bookingId}(bookingId=${booking.bookingId})}" method="post"	>
+    <button type="submit">Confirm Booking</button>
         </tr>
     </table>
 

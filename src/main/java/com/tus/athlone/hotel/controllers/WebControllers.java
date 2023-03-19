@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,10 +24,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.paypal.base.rest.PayPalRESTException;
 import com.tus.athlone.hotel.models.Booking;
+import com.tus.athlone.hotel.models.BookingDetail;
 import com.tus.athlone.hotel.models.Room;
 import com.tus.athlone.hotel.repositories.RoomRepository;
 import com.tus.athlone.hotel.services.BookingService;
+import com.tus.athlone.hotel.services.PaymentServices;
 import com.tus.athlone.hotel.services.RoomService;
 
 import jakarta.validation.Valid;
@@ -36,6 +40,9 @@ public class WebControllers {
 	
 	 @Autowired
 	    private RoomService roomService;
+	 
+	 @Autowired
+	    private PaymentServices paymentService;
 	 @Autowired
 	    private BookingService bookingService;
 		@Autowired
@@ -44,6 +51,11 @@ public class WebControllers {
 	@RequestMapping("/")
 	public String showHomePage(){
 		return "index.html";
+	}
+	@PostMapping("/paymentButton")
+	public String showPaymentButton(@ModelAttribute("booking") Booking booking, Model model){
+		model.addAttribute("booking", booking);
+		return "paymentButton.html";
 	}
 
 	
@@ -65,6 +77,28 @@ public class WebControllers {
     public String showaerrorPage() {
         return "error.html";
     }
+    
+    
+
+    @GetMapping("/success/{bookingId}")
+    public String handleSuccess(@RequestParam("paymentId") String paymentId,
+                                 @RequestParam("token") String token,
+                                 @RequestParam("PayerID") String payerId,
+                                 @PathVariable("bookingId") Long bookingId,
+                                 Model model) {
+        // do something with the payment information
+    	Booking booking = bookingService.getBookingById(bookingId);
+    	booking.setPaymentStatus(true);
+    	booking.setPaymentId(paymentId);
+    	booking.setPayerId(payerId);
+    	bookingService.saveBooking(booking);
+        model.addAttribute("paymentId", paymentId);
+        model.addAttribute("payerId", payerId);
+        model.addAttribute("reservationId", booking.getReservationId());
+        System.out.println(model.getAttribute("reservationId"));
+        return "success.html"; // return the name of your Thymeleaf template
+    }
+
     @GetMapping("/manageRooms")
     public String manageRoom() {
         return "manageRooms.html";
@@ -131,9 +165,22 @@ public class WebControllers {
     	return "redirect:/showAvailableRooms";
     }
     
-
+    @PostMapping("/payment/{bookingId}")
+    public String showPaymentForm(@PathVariable("bookingId") Long bookingId, RedirectAttributes redirectAttributes, Model model) {
+        Booking booking = bookingService.getBookingById(bookingId);
+        try {
+        	BookingDetail bookingDetail = new BookingDetail(booking.getBookingId(),booking.getReservationId(), booking.getRoom().getRoomType(), booking.getTotalRoomCost(), booking.getTaxableAmount());
+            PaymentServices paymentServices = new PaymentServices();
+            String approvalLink = paymentServices.authorizePayment(bookingDetail);
+            return "redirect:" + approvalLink;
+        } catch (PayPalRESTException ex) {
+        	System.out.println("Error removing room: " + ex);
+        	model.addAttribute("errorMessage", ex);
+        	return "error.html";
+        }
+    }
 	
-    @GetMapping("/bookRoom/form/{roomId}")
+    @PostMapping("/bookRoom/form/{roomId}")
     public String bookRoom(@PathVariable  Long roomId,Model model) {
     	Room room1 = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
     	model.addAttribute("room", room1);
@@ -163,7 +210,8 @@ public class WebControllers {
         // Check room availability
         List<Room> availableRooms = roomService.findAvailableRooms(checkinDate, checkoutDate, guests);
         System.out.println("Available Room:" + availableRooms);
-        if (!availableRooms.contains(room1)) {
+        System.out.println("payment status: " + booking.getPaymentSatus());
+        if ((!availableRooms.contains(room1) )&& ((booking.getPaymentSatus() == true))) {
             // Room is not available during the selected dates, show error message
         	model.addAttribute("errorMessage", "Room is not available during the selected dates, show error message.");
             return "error.html";
@@ -173,4 +221,6 @@ public class WebControllers {
         bookingService.saveBooking(booking);
         return "bookingConfirmation.html";
     }
+    
+
 }

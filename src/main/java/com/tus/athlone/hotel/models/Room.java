@@ -36,8 +36,7 @@ public class Room {
 	@Column(nullable = false, unique = true)
 	private String roomNumber;
 	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private RoomType roomType;
+	private String roomType;
 	@Column(nullable = false)
 	private int beds;
 	@Column(nullable = false)
@@ -88,7 +87,7 @@ public class Room {
 
 	}
 
-	public Room(String roomNumber, RoomType roomType, int beds, BigDecimal costPerNight, String description,
+	public Room(String roomNumber, String roomType, int beds, BigDecimal costPerNight, String description,
 			String image, String available) {
 		super();
 		this.roomNumber = roomNumber;
@@ -124,11 +123,11 @@ public class Room {
 		this.roomNumber = roomNumber;
 	}
 
-	public RoomType getRoomType() {
+	public String getRoomType() {
 		return roomType;
 	}
 
-	public void setRoomType(RoomType roomType) {
+	public void setRoomType(String roomType) {
 		this.roomType = roomType;
 	}
 

@@ -104,7 +104,7 @@ position: relative;
       <td th:text="${room.costPerNight}"></td>
       <td th:text="${room.beds}"></td>
       <td>
-      <form th:action="@{/bookRoom/form/{roomId}(roomId=${room.id})}"	>
+      <form th:action="@{/bookRoom/form/{roomId}(roomId=${room.id})}" method="post"	>
     <button type="submit">Book Room</button>
       </td>
     </tr>

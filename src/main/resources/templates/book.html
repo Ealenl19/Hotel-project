@@ -106,9 +106,9 @@
 		</div>
 		<div class="col-md-6 p-3 mb-3">
 					<label class="form-label">Check-Out-Date</label> <input type="date" id="checkOutDate" name="Check-Out-Date"
-				th:field="*{checkOutDate}" class="form-control shadow-none">
-		</div>
-
+				th:field="*{checkOutDate}"
+        th:attr="min=${#temporals.format(booking.checkInDate, 'yyyy-MM-dd')}" onchange="validateCheckOutDate()" class="form-control shadow-none">
+        </div>
 		<div class="col-lg-3">
 			<label class="form-label shadow-none" style="font-weight: 500;">Guest</label>
 			<select name="guests" th:field="*{guests}" class="form-select">
@@ -139,5 +139,16 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+		
+		<script>
+function validateCheckOutDate() {
+    var checkInDate = new Date(document.getElementById("checkInDate").value);
+    var checkOutDate = new Date(document.getElementById("checkOutDate").value);
+    if (checkOutDate < checkInDate) {
+        alert("Check-Out-Date must be after Check-In-Date");
+        document.getElementById("checkOutDate").value = "";
+    }
+}
+</script>
 </body>
 </html>
